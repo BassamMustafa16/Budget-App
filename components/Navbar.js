@@ -21,17 +21,17 @@ export default function Navbar() {
     },
   ];
   return (
-    <div class="flex flex-row items-center w-full overflow-auto text-beig bg-darkblue shadow-sm shadow-darkblue">
-        <div className="flex flex-row items-center">
-          {elements.map((element, index) => (
-            <NavbarElement
-              elementName={element.name}
-              elementPath={element.path}
-              key={index}
-              name={element}
-            />
-          ))}
-        </div>
+    <div className="flex flex-row items-center w-full overflow-auto text-beig bg-darkblue shadow-sm shadow-darkblue">
+      <div className="flex flex-row items-center">
+        {elements.map((element, index) => (
+          <NavbarElement
+            elementName={element.name}
+            elementPath={element.path}
+            key={index}
+            name={element}
+          />
+        ))}
+      </div>
     </div>
   );
 }
