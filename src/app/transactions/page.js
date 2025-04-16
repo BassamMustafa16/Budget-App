@@ -1,0 +1,43 @@
+"use client";
+import AddButton from "../../../components/AddButton";
+import TransactionCard from "../../../components/TransactionCard";
+import AddTransactionModal from "../../../components/AddTransactionModal";
+
+import { useState } from "react";
+export default function transactions() {
+  const [transactions, setTransactions] = useState([]);
+  const [isShowModal, setIsShowModal] = useState(false);
+
+  const handleDelete = (transactionId) => {
+    setTransactions((prevTransactions) =>
+      prevTransactions.filter((transaction) => transaction.id !== transactionId)
+    );
+  };
+
+  return (
+    <div>
+      <div className="flex flex-col gap-5 px-5">
+        {transactions.map((transaction, index) => (
+          <TransactionCard
+            transaction={transaction}
+            handleDelete={handleDelete}
+            key={index}
+          />
+        ))}
+      </div>
+      <span
+        className="fixed bg-beig bottom-10 right-3 z-10"
+        onClick={() => setIsShowModal(true)}
+      >
+        <AddButton />
+      </span>
+      {isShowModal && (
+        <AddTransactionModal
+          setIsShowModal={setIsShowModal}
+          transactions={transactions}
+          setTransactions={setTransactions}
+        />
+      )}
+    </div>
+  );
+}
