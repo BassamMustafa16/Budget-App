@@ -4,7 +4,7 @@ import TransactionCard from "../../../components/TransactionCard";
 import AddTransactionModal from "../../../components/AddTransactionModal";
 
 import { useState } from "react";
-export default function transactions() {
+export default function Transactions() {
   const [transactions, setTransactions] = useState([]);
   const [isShowModal, setIsShowModal] = useState(false);
 
