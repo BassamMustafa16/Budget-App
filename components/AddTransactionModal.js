@@ -1,5 +1,6 @@
 "use client";
-import { useRef } from "react";
+import { useRef, useState } from "react";
+import categories from "../data/categories"
 export default function AddTransactionModal({
   setIsShowModal,
   transactions,
@@ -11,6 +12,13 @@ export default function AddTransactionModal({
   const typeInput = useRef();
   const accountInput = useRef();
   const amountInput = useRef();
+
+  const [selectedCategory, setSelectedCategory] = useState("Food & Drinks");
+  
+  const handleCategoryChange = (event) => {
+    setSelectedCategory(event.target.value); // Update the selected category
+  };
+
   const handleClick = (event) => {
     // Check if the click is on the background (self) and not on child elements
     if (event.target === event.currentTarget) {
@@ -68,11 +76,14 @@ export default function AddTransactionModal({
         <select
           id="categoryInput"
           ref={categoryInput}
+          onChange={handleCategoryChange}
           className="border rounded-lg outline-none focus:border-2 px-3 py-1 mb-3"
         >
-          <option value={"Food & Drinks"}>Food & Drinks</option>
-          <option value={"Housing"}>Housing</option>
-          <option value={"Vehicle"}>Vehicle</option>
+          {categories.map((category) => (
+            <option key={category.category} value={category.category}>
+              {category.category}
+            </option>
+          ))}
         </select>
         <label htmlFor="subcategoryInput">Subcategory:</label>
         <select
@@ -80,9 +91,13 @@ export default function AddTransactionModal({
           ref={subcategoryInput}
           className="border rounded-lg outline-none focus:border-2 px-3 py-1 mb-3"
         >
-          <option value={"Food & Drinks"}>Food & Drinks</option>
-          <option value={"Housing"}>Housing</option>
-          <option value={"Vehicle"}>Vehicle</option>
+          {categories
+            .find((category) => category.category === selectedCategory)
+            .subcategories.map((subcategory) => (
+              <option key={subcategory} value={subcategory}>
+                {subcategory}
+              </option>
+            ))}
         </select>
         <label htmlFor="typeInput">Expense/Income:</label>
         <select
@@ -90,8 +105,8 @@ export default function AddTransactionModal({
           ref={typeInput}
           className="border rounded-lg outline-none focus:border-2 px-3 py-1 mb-3"
         >
-          <option value={"expense"}>Expense</option>
-          <option value={"income"}>Income</option>
+          <option value={"Expense"}>Expense</option>
+          <option value={"Income"}>Income</option>
         </select>
         <label htmlFor="accountInput">Account</label>
         <select
@@ -99,8 +114,8 @@ export default function AddTransactionModal({
           ref={accountInput}
           className="border rounded-lg outline-none focus:border-2 px-3 py-1 mb-3"
         >
-          <option value={"cash"}>Cash</option>
-          <option value={"ahly"}>Ahly</option>
+          <option value={"Cash"}>Cash</option>
+          <option value={"Ahly"}>Ahly</option>
         </select>
         <label htmlFor="amountInput">Amount:</label>
         <input

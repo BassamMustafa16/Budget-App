@@ -16,15 +16,20 @@ export default function Transactions() {
 
   return (
     <div>
-      <div className="flex flex-col gap-5 px-5">
-        {transactions.map((transaction, index) => (
-          <TransactionCard
-            transaction={transaction}
-            handleDelete={handleDelete}
-            key={index}
-          />
-        ))}
-      </div>
+      {transactions.length > 0 ? (
+        <div className="flex flex-col gap-5 px-5">
+          {transactions.map((transaction, index) => (
+            <TransactionCard
+              transaction={transaction}
+              handleDelete={handleDelete}
+              key={index}
+            />
+          ))}
+        </div>
+      ) : (
+        <p className="text-center">There is no recorded transactions</p>
+      )}
+
       <span
         className="fixed bg-beig bottom-10 right-3 z-10"
         onClick={() => setIsShowModal(true)}
