@@ -1,5 +1,5 @@
 "use client";
-import AddButton from "../../../components/AddButton";
+import AddTransactionButton from "../../../components/AddTransactionButton";
 import TransactionCard from "../../../components/TransactionCard";
 import AddTransactionModal from "../../../components/AddTransactionModal";
 
@@ -34,7 +34,7 @@ export default function Transactions() {
         className="fixed bg-beig bottom-10 right-3 z-10"
         onClick={() => setIsShowModal(true)}
       >
-        <AddButton />
+        <AddTransactionButton />
       </span>
       {isShowModal && (
         <AddTransactionModal

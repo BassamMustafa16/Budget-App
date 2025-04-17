@@ -1,7 +1,7 @@
-"use client"
+"use client";
 import { useState, useEffect } from "react";
 
-export default function AddButton() {
+export default function AddTransactionButton() {
   const [buttonText, setButtonText] = useState("+");
 
   useEffect(() => {
