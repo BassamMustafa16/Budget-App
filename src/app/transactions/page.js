@@ -1,7 +1,7 @@
 "use client";
-import AddTransactionButton from "../../../components/AddTransactionButton";
-import TransactionCard from "../../../components/TransactionCard";
-import AddTransactionModal from "../../../components/AddTransactionModal";
+import AddTransactionButton from "./components/AddTransactionButton";
+import TransactionCard from "./components/TransactionCard";
+import AddTransactionModal from "./components/AddTransactionModal";
 
 import { useState, useEffect } from "react";
 

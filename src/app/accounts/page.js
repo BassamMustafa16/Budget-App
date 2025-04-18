@@ -1,8 +1,8 @@
 "use client";
 import { useEffect, useState } from "react";
-import AccountCard from "../../../components/AccountCard";
-import AddAccountButton from "../../../components/AddAccountButton";
-import AddAccountModal from "../../../components/AddAccountModal";
+import AccountCard from "./components/AccountCard";
+import AddAccountButton from "./components/AddAccountButton";
+import AddAccountModal from "./components/AddAccountModal";
 
 export default function Accounts() {
   const [accounts, setAccounts] = useState([]);

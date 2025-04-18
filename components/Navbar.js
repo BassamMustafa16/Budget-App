@@ -19,6 +19,10 @@ export default function Navbar() {
       name: "Accounts",
       path: "/accounts",
     },
+    {
+      name: "Categories",
+      path: "/categories",
+    },
   ];
   return (
     <div className="flex flex-row items-center w-full overflow-auto text-beig bg-darkblue shadow-sm shadow-darkblue">

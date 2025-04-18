@@ -1,6 +1,6 @@
 "use client";
 import { useRef, useState } from "react";
-import categories from "../data/categories";
+import categories from "../../../../data/categories";
 export default function AddTransactionModal({
   setIsShowModal,
   transactions,
