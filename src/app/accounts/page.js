@@ -21,12 +21,27 @@ export default function Accounts() {
   useEffect(() => {
     fetchAccounts();
   }, []);
+
+  const handleDelete = async (id) => {
+    try {
+      const res = await fetch(`http://localhost:3001/api/accounts/${id}`, {
+        method: "DELETE",
+      });
+  
+      if (!res.ok) throw new Error("Failed to delete account");
+      alert("Account deleted!");
+      fetchAccounts();
+    } catch (err) {
+      console.error("❌ Error deleting account:", err);
+    }
+  };
+  
   return (
     <div className="flex flex-col gap-3 p-5">
       <h1 className="text-2xl font-bold mb-4">Accounts</h1>
       <div className="flex flex-col gap-3">
         {accounts.map((account) => (
-          <AccountCard key={account.name} account={account} />
+          <AccountCard key={account.name} account={account} handleDelete={handleDelete}/>
         ))}
       </div>
       <AddAccountButton setIsShowModal={setIsShowModal} />

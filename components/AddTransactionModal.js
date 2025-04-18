@@ -1,10 +1,11 @@
 "use client";
 import { useRef, useState } from "react";
-import categories from "../data/categories"
+import categories from "../data/categories";
 export default function AddTransactionModal({
   setIsShowModal,
   transactions,
   setTransactions,
+  fetchTransactions,
 }) {
   const dateInput = useRef();
   const categoryInput = useRef();
@@ -12,9 +13,11 @@ export default function AddTransactionModal({
   const typeInput = useRef();
   const accountInput = useRef();
   const amountInput = useRef();
+  const labelInput = useRef();
+  const descriptionInput = useRef();
 
   const [selectedCategory, setSelectedCategory] = useState("Food & Drinks");
-  
+
   const handleCategoryChange = (event) => {
     setSelectedCategory(event.target.value); // Update the selected category
   };
@@ -26,20 +29,44 @@ export default function AddTransactionModal({
     }
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    const transaction = {
-      id: Date.now(),
-      amount: parseFloat(amountInput.current.value).toFixed(2),
-      category: categoryInput.current.value,
-      subcategory: subcategoryInput.current.value,
-      type: typeInput.current.value,
-      account: accountInput.current.value,
-      date: dateInput.current.value,
-    };
 
-    // Add the new transaction to the transactions array
-    setTransactions((prevTransactions) => [...prevTransactions, transaction]);
+    const date = dateInput.current.value;
+    const category = categoryInput.current.value;
+    const subcategory = subcategoryInput.current.value;
+    const type = typeInput.current.value;
+    const account = accountInput.current.value;
+    const amount = parseFloat(amountInput.current.value).toFixed(2);
+    const label = labelInput.current.value;
+    const description = descriptionInput.current.value;
+
+    const transactionData = {
+      date,
+      category,
+      subcategory,
+      type,
+      account,
+      amount,
+      label,
+      description,
+    };
+    try {
+      const res = await fetch("http://localhost:3001/api/transactions", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(transactionData),
+      });
+
+      if (!res.ok) throw new Error("Failed to add transaction");
+
+      fetchTransactions();
+    } catch (err) {
+      console.error("❌ Error adding transaction:", err);
+      alert("Error adding account. Please try again.");
+    }
 
     // Close the modal after adding the transaction
     setIsShowModal(false);
@@ -126,6 +153,21 @@ export default function AddTransactionModal({
           className="border rounded-lg outline-none focus:border-2 px-3 py-1 mb-3"
           required
         ></input>
+        <label htmlFor="labelInput">Label</label>
+        <select
+          id="labelInput"
+          ref={labelInput}
+          className="border rounded-lg outline-none focus:border-2 px-3 py-1 mb-3"
+        >
+          <option value={"Personal"}>Personal</option>
+          <option value={"Home"}>Home</option>
+        </select>
+        <label htmlFor="descriptionInput">description</label>
+        <textarea
+          id="descriptionInput"
+          ref={descriptionInput}
+          className="border rounded-lg outline-none focus:border-2 px-3 py-1 mb-3"
+        ></textarea>
         <div className="flex flex-row gap-2 justify-between">
           <button
             type="submit"
