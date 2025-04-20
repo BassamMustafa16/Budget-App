@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleChevronDown } from "@fortawesome/free-solid-svg-icons"; // Added import
-
 import { library } from "@fortawesome/fontawesome-svg-core"; // Added import
 library.add(faCircleChevronDown); // Add icon to library
 
+import SubcategoryCard from "./SubcategoryCard";
+import AddSubcategory from "./AddSubcategory";
 export default function CategoryCard({ category }) {
   const [subcategories, setSubcategories] = useState([]);
   const [showSubcategories, setShowSubcategories] = useState(false);
@@ -25,12 +26,15 @@ export default function CategoryCard({ category }) {
   const handleClick = (event) => {
     setShowSubcategories(!showSubcategories);
     if (event.target === event.currentTarget) {
-      console.log("Clicked");
     }
   };
+
   return (
-    <li onClick={handleClick} className="flex flex-col gap-2">
-      <h2 className="flex flex-row justify-between w-full font-semibold">
+    <li className="flex flex-col gap-2">
+      <h2
+        onClick={handleClick}
+        className="flex flex-row justify-between w-full font-semibold"
+      >
         <span>{category.name}</span>
         <span
           className={`transition-transform duration-500 ${
@@ -41,15 +45,19 @@ export default function CategoryCard({ category }) {
         </span>
       </h2>
       <ul
-        className={`overflow-hidden transition-max-height duration-500 ease-in-out ${
+        className={`flex flex-col gap-1 overflow-hidden transition-max-height duration-500 ease-in-out ${
           showSubcategories ? "max-h-screen" : "max-h-0"
         } px-5`}
       >
-        {subcategories
-          .filter((subcategory) => subcategory.category_id === category.id)
-          .map((subcategory) => (
-            <li key={subcategory.id}>{subcategory.name}</li>
-          ))}
+        <SubcategoryCard
+          category={category}
+          subcategories={subcategories}
+          fetchSubcategories={fetchSubcategories}
+        />
+        <AddSubcategory
+          category={category}
+          fetchSubcategories={fetchSubcategories}
+        />
       </ul>
     </li>
   );

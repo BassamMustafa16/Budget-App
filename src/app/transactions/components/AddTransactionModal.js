@@ -1,6 +1,5 @@
 "use client";
-import { useRef, useState } from "react";
-import categories from "../../../../data/categories";
+import { useRef, useState, useEffect } from "react";
 export default function AddTransactionModal({
   setIsShowModal,
   transactions,
@@ -16,10 +15,43 @@ export default function AddTransactionModal({
   const labelInput = useRef();
   const descriptionInput = useRef();
 
-  const [selectedCategory, setSelectedCategory] = useState("Food & Drinks");
+  const [categories, setCategories] = useState([]);
+  const [subcategories, setSubcategories] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState({
+    id: 1,
+    name: "Food & Drinks",
+  });
+
+  const fetchCategories = async () => {
+    try {
+      const res = await fetch("http://localhost:3001/api/categories");
+      const data = await res.json();
+      setCategories(data);
+    } catch (err) {
+      console.log(`Error fetching categroies - ${err}`);
+    }
+  };
+
+  const fetchSubcategories = async () => {
+    try {
+      const res = await fetch("http://localhost:3001/api/subcategories");
+      const data = await res.json();
+      setSubcategories(data);
+    } catch (err) {
+      console.log(`Error Fetching Subcategories - ${err}`);
+    }
+  };
+
+  useEffect(() => {
+    fetchCategories();
+    fetchSubcategories();
+  }, []);
 
   const handleCategoryChange = (event) => {
-    setSelectedCategory(event.target.value); // Update the selected category
+    setSelectedCategory(
+      categories.find((category) => category.name === event.target.value)
+    ); // Update the selected category
+    console.log(selectedCategory);
   };
 
   const handleClick = (event) => {
@@ -107,8 +139,8 @@ export default function AddTransactionModal({
           className="border rounded-lg outline-none focus:border-2 px-3 py-1 mb-3"
         >
           {categories.map((category) => (
-            <option key={category.category} value={category.category}>
-              {category.category}
+            <option key={category.id} value={category.name}>
+              {category.name}
             </option>
           ))}
         </select>
@@ -118,11 +150,13 @@ export default function AddTransactionModal({
           ref={subcategoryInput}
           className="border rounded-lg outline-none focus:border-2 px-3 py-1 mb-3"
         >
-          {categories
-            .find((category) => category.category === selectedCategory)
-            .subcategories.map((subcategory) => (
-              <option key={subcategory} value={subcategory}>
-                {subcategory}
+          {subcategories
+            .filter(
+              (subcategory) => subcategory.category_id === selectedCategory.id
+            )
+            .map((subcategory) => (
+              <option key={subcategory.id} value={subcategory.name}>
+                {subcategory.name}
               </option>
             ))}
         </select>
