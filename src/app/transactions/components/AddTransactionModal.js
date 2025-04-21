@@ -64,6 +64,8 @@ export default function AddTransactionModal({
   const handleSubmit = async (event) => {
     event.preventDefault();
 
+    const token = localStorage.getItem("token");
+
     const date = dateInput.current.value;
     const category = categoryInput.current.value;
     const subcategory = subcategoryInput.current.value;
@@ -88,6 +90,7 @@ export default function AddTransactionModal({
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(transactionData),
       });
@@ -97,7 +100,7 @@ export default function AddTransactionModal({
       fetchTransactions();
     } catch (err) {
       console.error("❌ Error adding transaction:", err);
-      alert("Error adding account. Please try again.");
+      alert("Error adding transaction. Please try again.");
     }
 
     // Close the modal after adding the transaction

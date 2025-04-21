@@ -6,6 +6,7 @@ import AddTransactionModal from "./components/AddTransactionModal";
 import { useState, useEffect } from "react";
 
 export default function TransactionsPage() {
+  const token = localStorage.getItem("token");
   // State to store the list of transactions
   const [transactions, setTransactions] = useState([]);
 
@@ -15,7 +16,11 @@ export default function TransactionsPage() {
   // Function to fetch transactions from the API
   const fetchTransactions = async () => {
     try {
-      const res = await fetch("http://localhost:3001/api/transactions");
+      const res = await fetch("http://localhost:3001/api/transactions", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       const data = await res.json();
       setTransactions(data); // Update the state with fetched transactions
     } catch (err) {
@@ -31,9 +36,15 @@ export default function TransactionsPage() {
   // Function to handle the deletion of a transaction
   const handleDelete = async (transactionId) => {
     try {
-      const res = await fetch(`http://localhost:3001/api/transactions/${transactionId}`, {
-        method: "DELETE",
-      });
+      const res = await fetch(
+        `http://localhost:3001/api/transactions/${transactionId}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       if (!res.ok) throw new Error("Failed to delete transaction");
 

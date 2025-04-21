@@ -2,14 +2,15 @@
 const express = require("express");
 const router = express.Router();
 const db = require("../db");
+const authenticateToken = require("../middleware/auth");
 
 const handleTransaction = require("../utils/transactionHandler");
 
 // GET all transactions
-router.get("/", async (req, res) => {
+router.get("/", authenticateToken, async (req, res) => {
   try {
     // Fetch all transactions from the database
-    const [rows] = await db.query("SELECT * FROM transactions");
+    const [rows] = await db.query("SELECT * FROM transactions WHERE user_id = ?", [req.user.id]);
     res.json(rows);
   } catch (err) {
     // Handle errors during the fetch operation
@@ -21,7 +22,7 @@ router.get("/", async (req, res) => {
 });
 
 // POST a new transaction
-router.post("/", async (req, res) => {
+router.post("/",authenticateToken, async (req, res) => {
   const {
     date,
     category,
@@ -43,9 +44,10 @@ router.post("/", async (req, res) => {
     account,
     amount,
     label,
-    description)
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
-      [date, category, subcategory, type, account, amount, label, description]
+    description,
+    user_id)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      [date, category, subcategory, type, account, amount, label, description, req.user.id]
     );
 
     // Use the utility function to update account balances
@@ -63,7 +65,7 @@ router.post("/", async (req, res) => {
 });
 
 // DELETE a transaction by ID
-router.delete("/:id", async (req, res) => {
+router.delete("/:id",authenticateToken, async (req, res) => {
   const transactionId = req.params.id;
   try {
     // Fetch the transaction details to determine its type, account, and amount
