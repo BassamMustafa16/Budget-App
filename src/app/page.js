@@ -32,7 +32,7 @@ export default function LoginPage() {
         localStorage.setItem("userId", result.userId);
         localStorage.setItem("firstName", result.firstName);
         setFirstName(localStorage.getItem("firstName"));
-        router.push("/user/home");
+        router.push("/main/home");
       } else {
         alert(result.error || "Login failed");
       }
@@ -91,7 +91,7 @@ export default function LoginPage() {
               {"Don't have an account ?"}
               <Link
                 className="underline underline-offset-4 font-semibold"
-                href={"/user"}
+                href={"/register"}
               >
                 Register Now
               </Link>

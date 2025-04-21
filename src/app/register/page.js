@@ -28,7 +28,7 @@ export default function UserPage() {
       if (res.ok) {
         alert("Registration successful!");
         formRef.current.reset(); // Clear the form
-        router.push("/user/login"); // Redirect to login page
+        router.push("/"); // Redirect to login page
       } else {
         alert(result.error || "Registration failed");
       }
@@ -112,7 +112,7 @@ export default function UserPage() {
             Or do you already have an account{" "}
             <Link
               className="underline underline-offset-4 font-semibold"
-              href={"/user/login"}
+              href={"/"}
             >
               Login
             </Link>

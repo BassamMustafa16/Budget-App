@@ -6,7 +6,7 @@ export default function HomePage() {
     localStorage.removeItem("firstName");
     localStorage.removeItem("token");
     localStorage.removeItem("userId");
-    router.push("/user/register");
+    router.push("/");
   };
   return (
     <div>
