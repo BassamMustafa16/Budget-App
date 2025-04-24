@@ -2,19 +2,21 @@
 const express = require("express");
 const router = express.Router();
 const db = require("../db");
-
-console.log("here");
+const authenticateToken = require("../middleware/auth");
 // Get all subcategories
-router.get("/", async (req, res) => {
+router.get("/", authenticateToken, async (req, res) => {
   try {
-    const [rows] = await db.query("SELECT * FROM subcategories");
+    const [rows] = await db.query(
+      "SELECT * FROM subcategories WHERE user_id = ?",
+      [req.user.id]
+    );
     res.json(rows);
   } catch (err) {
     console.log("Error Fetching subcategories");
   }
 });
 
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", authenticateToken, async (req, res) => {
   const subcategoryId = req.params.id;
   try {
     const [result] = await db.query("DELETE FROM subcategories WHERE id = ?", [
@@ -33,7 +35,7 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
-router.post("/", async (req, res) => {
+router.post("/", authenticateToken, async (req, res) => {
   const { subcategoryName, categoryId } = req.body;
   if (!subcategoryName || !categoryId) {
     return res.status(400).json({ error: "name and category_id are required" });
@@ -41,8 +43,8 @@ router.post("/", async (req, res) => {
 
   try {
     const [result] = await db.query(
-      "INSERT INTO subcategories (name, category_id) VALUES (?, ?)",
-      [subcategoryName, categoryId]
+      "INSERT INTO subcategories (name, category_id, user_id) VALUES (?, ?, ?)",
+      [subcategoryName, categoryId, req.user.id]
     );
 
     res.status(201).json({

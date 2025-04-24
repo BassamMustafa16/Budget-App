@@ -11,6 +11,7 @@ export default function AddAccountModal({ setIsShowModal, fetchAccounts }) {
   };
 
   const handleSubmit = async (event) => {
+    const token = localStorage.getItem("token");
     event.preventDefault();
 
     const name = accountNameInput.current.value.trim();
@@ -35,6 +36,7 @@ export default function AddAccountModal({ setIsShowModal, fetchAccounts }) {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(accountData),
       });

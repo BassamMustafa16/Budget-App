@@ -9,8 +9,13 @@ export default function Accounts() {
   const [isShowModal, setIsShowModal] = useState(false);
 
   const fetchAccounts = async () => {
+    const token = localStorage.getItem("token");
     try {
-      const res = await fetch("http://localhost:3001/api/accounts");
+      const res = await fetch("http://localhost:3001/api/accounts", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       const data = await res.json();
       setAccounts(data);
     } catch (err) {
@@ -27,7 +32,7 @@ export default function Accounts() {
       const res = await fetch(`http://localhost:3001/api/accounts/${id}`, {
         method: "DELETE",
       });
-  
+
       if (!res.ok) throw new Error("Failed to delete account");
       alert("Account deleted!");
       fetchAccounts();
@@ -35,17 +40,26 @@ export default function Accounts() {
       console.error("❌ Error deleting account:", err);
     }
   };
-  
+
   return (
     <div className="flex flex-col gap-3 p-5">
       <h1 className="text-2xl font-bold mb-4">Accounts</h1>
       <div className="flex flex-col gap-3">
         {accounts.map((account) => (
-          <AccountCard key={account.name} account={account} handleDelete={handleDelete}/>
+          <AccountCard
+            key={account.name}
+            account={account}
+            handleDelete={handleDelete}
+          />
         ))}
       </div>
       <AddAccountButton setIsShowModal={setIsShowModal} />
-      {isShowModal && <AddAccountModal setIsShowModal={setIsShowModal} fetchAccounts={fetchAccounts} />}
+      {isShowModal && (
+        <AddAccountModal
+          setIsShowModal={setIsShowModal}
+          fetchAccounts={fetchAccounts}
+        />
+      )}
     </div>
   );
 }

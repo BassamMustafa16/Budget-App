@@ -3,11 +3,15 @@ const express = require("express");
 const router = express.Router();
 const db = require("../db");
 
+const authenticateToken = require("../middleware/auth");
+
 // GET all accounts
-router.get("/", async (req, res) => {
+router.get("/", authenticateToken, async (req, res) => {
   try {
     // Fetch all accounts from the database
-    const [rows] = await db.query("SELECT * FROM accounts");
+    const [rows] = await db.query("SELECT * FROM accounts WHERE user_id = ?", [
+      req.user.id,
+    ]);
     res.json(rows);
   } catch (err) {
     // Handle errors during the fetch operation
@@ -19,7 +23,7 @@ router.get("/", async (req, res) => {
 });
 
 // POST a new account
-router.post("/", async (req, res) => {
+router.post("/", authenticateToken, async (req, res) => {
   const {
     name,
     initial_credit,
@@ -32,8 +36,8 @@ router.post("/", async (req, res) => {
   try {
     // Insert a new account into the database
     const [result] = await db.query(
-      `INSERT INTO accounts (name, initial_credit, total_expenses, total_incomes, total_transfer_out, total_transfer_in)
-         VALUES (?, ?, ?, ?, ?, ?)`,
+      `INSERT INTO accounts (name, initial_credit, total_expenses, total_incomes, total_transfer_out, total_transfer_in, user_id)
+         VALUES (?, ?, ?, ?, ?, ?, ?)`,
       [
         name,
         initial_credit,
@@ -41,6 +45,7 @@ router.post("/", async (req, res) => {
         total_incomes,
         total_transfer_out,
         total_transfer_in,
+        req.user.id,
       ]
     );
 

@@ -1,11 +1,11 @@
 const db = require("../db");
 
-async function handleTransaction(type, account, amount, action) {
+async function handleTransaction(type, account_id, amount, action) {
   try {
     // Fetch the current account details from the database
     const [accountRows] = await db.query(
-      "SELECT * FROM accounts WHERE name = ?",
-      [account]
+      "SELECT * FROM accounts WHERE id = ?",
+      [account_id]
     );
 
     // Check if the account exists
@@ -28,8 +28,8 @@ async function handleTransaction(type, account, amount, action) {
 
           // Update the total_expenses in the accounts table
           await db.query(
-            "UPDATE accounts SET total_expenses = ? WHERE name = ?",
-            [updatedTotalExpenses, account]
+            "UPDATE accounts SET total_expenses = ? WHERE id = ?",
+            [updatedTotalExpenses, account_id]
           );
 
           // Return a success message
@@ -47,10 +47,10 @@ async function handleTransaction(type, account, amount, action) {
               : currentTotalIncomes - parseFloat(amount);
 
           // Update the total_incomes in the accounts table
-          await db.query(
-            "UPDATE accounts SET total_incomes = ? WHERE name = ?",
-            [updatedTotalIncomes, account]
-          );
+          await db.query("UPDATE accounts SET total_incomes = ? WHERE id = ?", [
+            updatedTotalIncomes,
+            account_id,
+          ]);
 
           // Return a success message
           return { message: "Accounts updated successfully" };

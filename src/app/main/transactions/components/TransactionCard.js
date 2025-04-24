@@ -12,7 +12,7 @@ export default function TransactionCard({ transaction, handleDelete }) {
       </span>
       <p className="text-2xl font-semibold">{`${transaction.amount} EGP`}</p>
       <p className="text-sm">{`${transaction.category} - ${transaction.subcategory}`}</p>
-      <p className="text-sm">{`${transaction.type} - ${transaction.account}`}</p>
+      <p className="text-sm">{`${transaction.type} - ${transaction.account_name}`}</p>
       <p className="text-sm">
         {new Date(transaction.date).toLocaleDateString("en-CA")}
       </p>

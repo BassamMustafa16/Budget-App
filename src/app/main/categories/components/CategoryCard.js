@@ -11,7 +11,12 @@ export default function CategoryCard({ category }) {
   const [showSubcategories, setShowSubcategories] = useState(false);
   const fetchSubcategories = async () => {
     try {
-      const res = await fetch("http://localhost:3001/api/subcategories");
+      const token = localStorage.getItem("token");
+      const res = await fetch("http://localhost:3001/api/subcategories", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       const data = await res.json();
       setSubcategories(data);
     } catch (err) {

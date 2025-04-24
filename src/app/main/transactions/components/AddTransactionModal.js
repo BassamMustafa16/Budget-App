@@ -15,36 +15,80 @@ export default function AddTransactionModal({
   const labelInput = useRef();
   const descriptionInput = useRef();
 
-  const [categories, setCategories] = useState([]);
+  const [categories, setCategories] = useState([]); // Ensure categories is always an array
   const [subcategories, setSubcategories] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState({
-    id: 1,
-    name: "Food & Drinks",
-  });
+  const [selectedCategory, setSelectedCategory] = useState({});
+  const [accounts, setAccounts] = useState([]);
 
   const fetchCategories = async () => {
     try {
-      const res = await fetch("http://localhost:3001/api/categories");
+      const token = localStorage.getItem("token");
+      const res = await fetch("http://localhost:3001/api/categories", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       const data = await res.json();
-      setCategories(data);
+      if (Array.isArray(data)) {
+        setCategories(data); // Only set categories if the response is an array
+        setSelectedCategory(data[0]);
+      } else {
+        console.error("Invalid categories response:", data);
+        setCategories([]); // Fallback to an empty array
+      }
     } catch (err) {
-      console.log(`Error fetching categroies - ${err}`);
+      console.log(`Error fetching categories - ${err}`);
+      setCategories([]); // Fallback to an empty array in case of error
     }
   };
 
   const fetchSubcategories = async () => {
     try {
-      const res = await fetch("http://localhost:3001/api/subcategories");
+      const token = localStorage.getItem("token");
+      const res = await fetch("http://localhost:3001/api/subcategories", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
       const data = await res.json();
-      setSubcategories(data);
+      if (Array.isArray(data)) {
+        setSubcategories(data); // Only set subcategories if the response is an array
+      } else {
+        console.error("Invalid subcategories response:", data);
+        setSubcategories([]); // Fallback to an empty array
+      }
     } catch (err) {
-      console.log(`Error Fetching Subcategories - ${err}`);
+      console.log(`Error fetching subcategories - ${err}`);
+      setSubcategories([]); // Fallback to an empty array in case of error
+    }
+  };
+
+  const fetchAccounts = async () => {
+    const token = localStorage.getItem("token");
+    try {
+      const res = await fetch("http://localhost:3001/api/accounts", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const data = await res.json();
+      if (Array.isArray(data)) {
+        setAccounts(data); // Only set accounts if the response is an array
+      } else {
+        console.error("Invalid accounts response:", data);
+        setAccounts([]); // Fallback to an empty array
+      }
+    } catch (err) {
+      console.error("Error fetching accounts:", err);
+      setAccounts([]); // Fallback to an empty array in case of error
     }
   };
 
   useEffect(() => {
     fetchCategories();
     fetchSubcategories();
+    fetchAccounts();
   }, []);
 
   const handleCategoryChange = (event) => {
@@ -80,7 +124,7 @@ export default function AddTransactionModal({
       category,
       subcategory,
       type,
-      account,
+      account, // Use account directly instead of JSON.stringify(account)
       amount,
       label,
       description,
@@ -126,6 +170,7 @@ export default function AddTransactionModal({
         onSubmit={handleSubmit}
         className="flex flex-col bg-beig rounded-2xl p-5"
       >
+        {/* Data Input */}
         <label htmlFor="dateInput">Date:</label>
         <input
           type="date"
@@ -134,6 +179,7 @@ export default function AddTransactionModal({
           ref={dateInput}
           className="border rounded-lg outline-none focus:border-2 px-3 py-1 mb-3"
         ></input>
+        {/* Category Input */}
         <label htmlFor="categoryInput">Category:</label>
         <select
           id="categoryInput"
@@ -147,6 +193,7 @@ export default function AddTransactionModal({
             </option>
           ))}
         </select>
+        {/* Subcategory Input */}
         <label htmlFor="subcategoryInput">Subcategory:</label>
         <select
           id="subcategoryInput"
@@ -163,6 +210,7 @@ export default function AddTransactionModal({
               </option>
             ))}
         </select>
+        {/* Type Input */}
         <label htmlFor="typeInput">Expense/Income:</label>
         <select
           id="typeInput"
@@ -172,15 +220,20 @@ export default function AddTransactionModal({
           <option value={"Expense"}>Expense</option>
           <option value={"Income"}>Income</option>
         </select>
+        {/* Account Input */}
         <label htmlFor="accountInput">Account</label>
         <select
           id="accountInput"
           ref={accountInput}
           className="border rounded-lg outline-none focus:border-2 px-3 py-1 mb-3"
         >
-          <option value={"Cash"}>Cash</option>
-          <option value={"Ahly"}>Ahly</option>
+          {accounts.map((account) => (
+            <option key={account.id} value={JSON.stringify(account)}>
+              {account.name}
+            </option>
+          ))}
         </select>
+        {/* Amount Input */}
         <label htmlFor="amountInput">Amount:</label>
         <input
           type="number"
@@ -190,6 +243,7 @@ export default function AddTransactionModal({
           className="border rounded-lg outline-none focus:border-2 px-3 py-1 mb-3"
           required
         ></input>
+        {/* Label Input */}
         <label htmlFor="labelInput">Label</label>
         <select
           id="labelInput"
@@ -199,6 +253,7 @@ export default function AddTransactionModal({
           <option value={"Personal"}>Personal</option>
           <option value={"Home"}>Home</option>
         </select>
+        {/* Description Input */}
         <label htmlFor="descriptionInput">description</label>
         <textarea
           id="descriptionInput"

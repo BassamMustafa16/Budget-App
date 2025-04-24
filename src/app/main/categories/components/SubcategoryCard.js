@@ -9,10 +9,14 @@ export default function SubcategoryCard({
 }) {
   const handleDelete = async (subcategoryId) => {
     try {
+      const token = localStorage.getItem("token");
       const res = await fetch(
         `http://localhost:3001/api/subcategories/${subcategoryId}`,
         {
           method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
       );
 
