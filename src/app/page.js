@@ -4,8 +4,10 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLock } from "@fortawesome/free-solid-svg-icons";
+import { useAuth } from "./context/AuthContext";
 
 export default function LoginPage() {
+  const { saveToken } = useAuth();
   const router = useRouter();
   const [firstName, setFirstName] = useState(localStorage.getItem("firstName"));
   const formRef = useRef(null); // Define the formRef
@@ -28,7 +30,7 @@ export default function LoginPage() {
       const result = await res.json();
       if (res.ok) {
         alert("Login successful!");
-        localStorage.setItem("token", result.token);
+        saveToken(result.token);
         localStorage.setItem("userId", result.userId);
         localStorage.setItem("firstName", result.firstName);
         setFirstName(localStorage.getItem("firstName"));

@@ -3,10 +3,10 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
-  --darkblue: #27445D;
-  --darkgreen: #497D74;
-  --lightblue: #71BBB2;
-  --beig: #EFE9D5;
+  --darkblue: #27445d;
+  --darkgreen: #497d74;
+  --lightblue: #71bbb2;
+  --beig: #efe9d5;
 }
 
 @theme inline {

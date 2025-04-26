@@ -2,36 +2,18 @@
 import AddTransactionButton from "./components/AddTransactionButton";
 import TransactionCard from "./components/TransactionCard";
 import AddTransactionModal from "./components/AddTransactionModal";
+import { useAuth } from "../../context/AuthContext";
+import { useData } from "../contexts/DataContext";
 
 import { useState, useEffect } from "react";
 
 export default function TransactionsPage() {
-  const token = localStorage.getItem("token");
-  // State to store the list of transactions
-  const [transactions, setTransactions] = useState([]);
+  const { token } = useAuth();
 
+  // State to store the list of transactions
+  const { transactions, refetchTransactions } = useData();
   // State to control the visibility of the Add Transaction modal
   const [isShowModal, setIsShowModal] = useState(false);
-
-  // Function to fetch transactions from the API
-  const fetchTransactions = async () => {
-    try {
-      const res = await fetch("http://localhost:3001/api/transactions", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      const data = await res.json();
-      setTransactions(data); // Update the state with fetched transactions
-    } catch (err) {
-      console.error("Error fetching transactions:", err);
-    }
-  };
-
-  // Fetch transactions when the component is mounted
-  useEffect(() => {
-    fetchTransactions();
-  }, []);
 
   // Function to handle the deletion of a transaction
   const handleDelete = async (transactionId) => {
@@ -49,7 +31,7 @@ export default function TransactionsPage() {
       if (!res.ok) throw new Error("Failed to delete transaction");
 
       alert("Transaction deleted!"); // Notify the user
-      fetchTransactions(); // Refresh the transactions list
+      refetchTransactions(); // Refresh the transactions list
     } catch (err) {
       console.error("❌ Error deleting transaction:", err);
     }
@@ -83,10 +65,9 @@ export default function TransactionsPage() {
       {/* Add Transaction modal */}
       {isShowModal && (
         <AddTransactionModal
+          token={token}
           setIsShowModal={setIsShowModal} // Function to close the modal
-          transactions={transactions} // Pass current transactions
-          setTransactions={setTransactions} // Update transactions state
-          fetchTransactions={fetchTransactions} // Refresh transactions list
+          fetchTransactions={refetchTransactions} // Refresh transactions list
         />
       )}
     </div>

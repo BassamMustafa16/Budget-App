@@ -1,15 +1,14 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faXmark, faSquarePlus } from "@fortawesome/free-solid-svg-icons"; // Added import
-import { library } from "@fortawesome/fontawesome-svg-core"; // Added import
-library.add(faXmark, faSquarePlus);
+import { faXmark } from "@fortawesome/free-solid-svg-icons";
+import { useAuth } from "@/app/context/AuthContext";
 export default function SubcategoryCard({
   category,
   subcategories,
   fetchSubcategories,
 }) {
+  const { token } = useAuth();
   const handleDelete = async (subcategoryId) => {
     try {
-      const token = localStorage.getItem("token");
       const res = await fetch(
         `http://localhost:3001/api/subcategories/${subcategoryId}`,
         {
@@ -36,7 +35,7 @@ export default function SubcategoryCard({
           <li key={subcategory.id} className="flex flex-row justify-between">
             <h3>{subcategory.name}</h3>
             <span onClick={() => handleDelete(subcategory.id)}>
-              <FontAwesomeIcon icon="fa-solid fa-xmark" />
+              <FontAwesomeIcon icon={faXmark} />
             </span>
           </li>
         ))}

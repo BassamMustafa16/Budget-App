@@ -1,16 +1,15 @@
+"use client";
 import { useRef } from "react";
-
+import { useAuth } from "@/app/context/AuthContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSquarePlus } from "@fortawesome/free-solid-svg-icons"; // Added import
-import { library } from "@fortawesome/fontawesome-svg-core"; // Added import
-library.add(faSquarePlus); // Add icon to library
+import { faSquarePlus } from "@fortawesome/free-solid-svg-icons";
 
 export default function AddCategory({ fetchCategories }) {
   const addCategoryInput = useRef();
-
+  const { token } = useAuth();
+  
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const token = localStorage.getItem("token");
     try {
       const res = await fetch("http://localhost:3001/api/categories/", {
         method: "POST",
@@ -42,13 +41,13 @@ export default function AddCategory({ fetchCategories }) {
         maxLength={20}
         type="text"
         placeholder="Add Category"
-        className="px-3 py-1 border rounded-lg outline-none focus:border-2"
+        className="px-3 py-1 border border-[#27445d80] rounded-xl outline-none focus:border-2 focus:border-darkblue"
       ></input>
       <button
         type="submit"
         className="absolute right-3 top-1/2 transform -translate-y-1/2"
       >
-        <FontAwesomeIcon icon="fa-solid fa-square-plus" />
+        <FontAwesomeIcon icon={faSquarePlus} />
       </button>
     </form>
   );

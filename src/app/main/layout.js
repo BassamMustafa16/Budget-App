@@ -1,4 +1,5 @@
 import Navbar from "../../../components/Navbar";
+import { DataProvider } from "./contexts/DataContext";
 
 export default function RootLayout({ children }) {
   return (
@@ -6,7 +7,9 @@ export default function RootLayout({ children }) {
       <nav>
         <Navbar />
       </nav>
-      <main>{children}</main>
+      <main>
+        <DataProvider>{children}</DataProvider>
+      </main>
     </>
   );
 }

@@ -1,32 +1,15 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCircleChevronDown } from "@fortawesome/free-solid-svg-icons"; // Added import
-import { library } from "@fortawesome/fontawesome-svg-core"; // Added import
-library.add(faCircleChevronDown); // Add icon to library
+import { faCircleChevronDown } from "@fortawesome/free-solid-svg-icons";
 
 import SubcategoryCard from "./SubcategoryCard";
 import AddSubcategory from "./AddSubcategory";
-export default function CategoryCard({ category }) {
-  const [subcategories, setSubcategories] = useState([]);
+export default function CategoryCard({
+  category,
+  subcategories,
+  fetchSubcategories,
+}) {
   const [showSubcategories, setShowSubcategories] = useState(false);
-  const fetchSubcategories = async () => {
-    try {
-      const token = localStorage.getItem("token");
-      const res = await fetch("http://localhost:3001/api/subcategories", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      const data = await res.json();
-      setSubcategories(data);
-    } catch (err) {
-      console.error("Error fetching accounts:", err);
-    }
-  };
-
-  useEffect(() => {
-    fetchSubcategories();
-  }, []);
 
   const handleClick = (event) => {
     setShowSubcategories(!showSubcategories);
@@ -35,7 +18,7 @@ export default function CategoryCard({ category }) {
   };
 
   return (
-    <li className="flex flex-col gap-2">
+    <li className="flex flex-col gap-2 border border-[#27445d80] rounded-xl p-3">
       <h2
         onClick={handleClick}
         className="flex flex-row justify-between w-full font-semibold"
@@ -46,7 +29,7 @@ export default function CategoryCard({ category }) {
             showSubcategories && "rotate-180"
           }`}
         >
-          <FontAwesomeIcon icon="fa-circle-chevron-down" />
+          <FontAwesomeIcon icon={faCircleChevronDown} />
         </span>
       </h2>
       <ul

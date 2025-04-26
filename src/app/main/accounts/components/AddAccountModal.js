@@ -1,8 +1,11 @@
 import { useRef } from "react";
 
-export default function AddAccountModal({ setIsShowModal, fetchAccounts }) {
-  const accountNameInput = useRef();
-  const initialCreditInput = useRef();
+export default function AddAccountModal({
+  setIsShowModal,
+  fetchAccounts,
+  token,
+}) {
+  const formRef = useRef(null);
 
   const handleClick = (event) => {
     if (event.target === event.currentTarget) {
@@ -11,11 +14,9 @@ export default function AddAccountModal({ setIsShowModal, fetchAccounts }) {
   };
 
   const handleSubmit = async (event) => {
-    const token = localStorage.getItem("token");
     event.preventDefault();
-
-    const name = accountNameInput.current.value.trim();
-    const initial_credit = parseFloat(initialCreditInput.current.value);
+    const formData = new FormData(formRef.current);
+    const { name, initial_credit } = Object.fromEntries(formData.entries());
 
     if (!name || isNaN(initial_credit)) {
       alert("Please fill in all fields correctly.");
@@ -59,6 +60,7 @@ export default function AddAccountModal({ setIsShowModal, fetchAccounts }) {
         onClick={handleClick}
       >
         <form
+          ref={formRef}
           onSubmit={handleSubmit}
           className="flex flex-col bg-beig rounded-2xl p-5"
         >
@@ -66,14 +68,14 @@ export default function AddAccountModal({ setIsShowModal, fetchAccounts }) {
           <input
             type="text"
             id="accountNameInput"
+            name="name"
             placeholder="Please enter account name...."
-            ref={accountNameInput}
             className="border rounded-lg outline-none focus:border-2 px-3 py-1 mb-3"
           />
           <label htmlFor="initialCreditInput">Initial Credit:</label>
           <input
             id="initialCreditInput"
-            ref={initialCreditInput}
+            name="initial_credit"
             type="number"
             step="0.01"
             defaultValue="0.00"
