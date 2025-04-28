@@ -42,7 +42,9 @@ export const DataProvider = ({ children }) => {
   );
 
   useEffect(() => {
+    // Fetch all data only once when the component mounts
     const fetchAllData = async () => {
+      if (!token) return; // Ensure token is available before fetching
       await Promise.all([
         fetchData("accounts", setAccounts),
         fetchData("categories", setCategories),
@@ -52,7 +54,7 @@ export const DataProvider = ({ children }) => {
     };
 
     fetchAllData();
-  }, [fetchData]);
+  }, [token]); // Only re-run when the token changes
 
   return (
     <DataContext.Provider
