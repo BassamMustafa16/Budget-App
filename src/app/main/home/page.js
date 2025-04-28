@@ -1,16 +1,12 @@
 "use client";
-import { useRouter } from "next/navigation";
+import useHandleLogout from "@/app/utils/useHandleLogout";
+
 export default function HomePage() {
-  const router = useRouter();
-  const handleLogOut = () => {
-    localStorage.removeItem("firstName");
-    localStorage.removeItem("token");
-    localStorage.removeItem("userId");
-    router.push("/");
-  };
+  const handleLogout = useHandleLogout();
+
   return (
     <div>
-      <button onClick={handleLogOut}>Log out</button>
+      <button onClick={handleLogout}>Log out</button>
     </div>
   );
 }

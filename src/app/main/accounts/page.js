@@ -1,33 +1,16 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import AccountCard from "./components/AccountCard";
 import AddAccountButton from "./components/AddAccountButton";
 import AddAccountModal from "./components/AddAccountModal";
 import { useAuth } from "../../context/AuthContext";
+import { useData } from "../contexts/DataContext";
 
 export default function Accounts() {
-  const [accounts, setAccounts] = useState([]);
+  const { accounts, refetchAccounts } = useData();
   const [isShowModal, setIsShowModal] = useState(false);
 
   const { token } = useAuth();
-
-  const fetchAccounts = async () => {
-    try {
-      const res = await fetch("http://localhost:3001/api/accounts", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      const data = await res.json();
-      setAccounts(data);
-    } catch (err) {
-      console.error("Error fetching accounts:", err);
-    }
-  };
-
-  useEffect(() => {
-    fetchAccounts();
-  }, []);
 
   const handleDelete = async (id) => {
     try {
@@ -37,7 +20,7 @@ export default function Accounts() {
 
       if (!res.ok) throw new Error("Failed to delete account");
       alert("Account deleted!");
-      fetchAccounts();
+      refetchAccounts();
     } catch (err) {
       console.error("❌ Error deleting account:", err);
     }
@@ -58,9 +41,9 @@ export default function Accounts() {
       <AddAccountButton setIsShowModal={setIsShowModal} />
       {isShowModal && (
         <AddAccountModal
-        token={token}
+          token={token}
           setIsShowModal={setIsShowModal}
-          fetchAccounts={fetchAccounts}
+          fetchAccounts={refetchAccounts}
         />
       )}
     </div>

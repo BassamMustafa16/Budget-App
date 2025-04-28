@@ -5,7 +5,7 @@ import AddTransactionModal from "./components/AddTransactionModal";
 import { useAuth } from "../../context/AuthContext";
 import { useData } from "../contexts/DataContext";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 export default function TransactionsPage() {
   const { token } = useAuth();
