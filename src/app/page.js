@@ -1,5 +1,5 @@
 "use client";
-import { useState, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -9,9 +9,15 @@ import { useAuth } from "./context/AuthContext";
 export default function LoginPage() {
   const { saveToken } = useAuth();
   const router = useRouter();
-  const [firstName, setFirstName] = useState(localStorage.getItem("firstName"));
+  const [firstName, setFirstName] = useState("");
   const formRef = useRef(null); // Define the formRef
 
+  useEffect(() => {
+    const storedFirstName = localStorage.getItem("firstName");
+    if (storedFirstName) {
+      setFirstName(storedFirstName);
+    }
+  }, []);
   const handleSubmit = async (event) => {
     event.preventDefault();
 

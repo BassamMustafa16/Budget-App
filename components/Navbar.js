@@ -1,8 +1,15 @@
 "use client";
+import { useState, useEffect } from "react";
 import NavbarElement from "./NavbarElement";
 
 export default function Navbar() {
-  const firstName = localStorage.getItem("firstName");
+  const [firstName, setFirstName] = useState("");
+  useEffect(() => {
+    const storedFirstName = localStorage.getItem("firstName");
+    if (storedFirstName) {
+      setFirstName(storedFirstName);
+    }
+  }, []);
   const elements = [
     {
       name: firstName,
