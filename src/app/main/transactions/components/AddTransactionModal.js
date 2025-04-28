@@ -47,7 +47,6 @@ export default function AddTransactionModal({
       console.error("❌ Error adding transaction:", err);
       alert("Error adding transaction. Please try again.");
     }
-
     // Close the modal after adding the transaction
     setIsShowModal(false);
   };
